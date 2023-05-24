@@ -41,6 +41,7 @@
     let regExpId = /^[0-9a-z]+$/;
     let regExpPw = /(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-zA-Z]{2,50}).{8,50}$/;
 
+
     if (!regExpId.test(id)){
       alert("아이디 입력을 확인해주세요!!")
       return;

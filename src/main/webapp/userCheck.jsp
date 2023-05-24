@@ -21,7 +21,6 @@
   }
   if (userId != null && userPwd != null){
     UserDAO userDAO = new UserDAO();
-
   }
 %>
 <html>

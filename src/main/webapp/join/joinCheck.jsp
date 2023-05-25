@@ -13,20 +13,27 @@
 </head>
 <body>
     <%
+        request.setCharacterEncoding("UTF-8");
         /**
          * 1. DB와 연동하여 이미 회원이 존재하는지 확인
          * 2. 회원이 존재하지 않는다면 -> 회원가입 성공 ( DB에 저장 ) loginPage.jsp 로 Redirection
          * 3. 회원이 존재한다면 -> 회원가입 실패 JoinPage.jsp 로 Redirection
          * */
-
+        UserDAO userDAO = new UserDAO();
+        String userId = request.getParameter("userId");
         String userName = request.getParameter("userName");
         String userEmail = request.getParameter("userEmail");
-        String userId = request.getParameter("userId");
         String userPwd = request.getParameter("userPwd");
 
-        UserDAO userDAO = new UserDAO();
+        System.out.print(userId +" " + userName +" "+ userPwd + " "+ userEmail);
 
-        userDAO.join(userId,userPwd,userName,userEmail);
+        int count = userDAO.join(userId,userPwd,userName,userEmail);
+
+        String url = "joinPage.jsp";
+        if (count == 1){
+            url = "loginPage.jsp";
+        }
+        response.sendRedirect(url);
     %>
 </body>
 </html>

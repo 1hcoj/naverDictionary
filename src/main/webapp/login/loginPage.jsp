@@ -77,7 +77,7 @@
         </div>
       </form>
 
-      <p id="textJoin" style="text-align: center"><a href="joinPage.jsp">회원가입</a></p>
+      <p id="textJoin" style="text-align: center"><a href="../join/joinPage.jsp">회원가입</a></p>
 
     </div>
 

@@ -24,14 +24,12 @@
         String userName = request.getParameter("userName");
         String userEmail = request.getParameter("userEmail");
         String userPwd = request.getParameter("userPwd");
-
-        System.out.print(userId +" " + userName +" "+ userPwd + " "+ userEmail);
+        String url = "joinPage.jsp";
 
         int count = userDAO.join(userId,userPwd,userName,userEmail);
 
-        String url = "joinPage.jsp";
         if (count == 1){
-            url = "loginPage.jsp";
+            url = "login/loginPage.jsp";
         }
         response.sendRedirect(url);
     %>

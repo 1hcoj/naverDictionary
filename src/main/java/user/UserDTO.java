@@ -4,6 +4,28 @@ package user;
 public class UserDTO {
     private String userId;
     private String userPwd;
+    private int id;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    private String userName;
+
+    public UserDTO(int id,String userId,String userName) {
+        this.userId = userId;
+        this.id = id;
+        this.userName = userName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 
     public String getUserId() {
         return userId;

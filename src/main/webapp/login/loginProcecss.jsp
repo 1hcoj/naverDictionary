@@ -12,7 +12,7 @@
   request.setCharacterEncoding("UTF-8");
   String userId = null;
   String userPwd = null;
-  String[] userInfor;
+  UserDTO userInfor;
   if (request.getParameter("userId") != null) {
     userId = (String)request.getParameter("userId");
   }
@@ -23,11 +23,12 @@
     UserDAO userDAO = new UserDAO();
 
     userInfor = userDAO.doLogin(userId,userPwd);
-    if (userInfor[0] != null && userInfor[1] != null){
-        session.setAttribute("id", userInfor[0]);
-        session.setAttribute("userName",userInfor[1]);
+    if (userInfor != null){
+        session.setAttribute("id", userInfor.getId());
+        session.setAttribute("userName",userInfor.getUserName());
+        session.setMaxInactiveInterval(1800); // 30분간 세션유지
 
-        response.sendRedirect("index.jsp");
+        response.sendRedirect("../index.jsp");
     } else {
         out.println("<script>alert('아이디 또는 비밀번호가 잘못되었습니다.');</script>");
         response.sendRedirect("loginPage.jsp");

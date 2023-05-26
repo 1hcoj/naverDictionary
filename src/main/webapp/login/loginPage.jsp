@@ -61,7 +61,7 @@
 
     <div id="container" role="main" >
 
-      <form name="loginForm" method="post" action="userCheck.jsp">
+      <form name="loginForm" method="post" action="loginProcecss.jsp">
         <div id="id" role="inputId">
           <p>아이디</p>
           <input type="text" name="userId">

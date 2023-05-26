@@ -143,7 +143,7 @@
 
   <div class="wrapper">
     <div id="container" role="main">
-      <form name="joinForm" method="post" action="joinCheck.jsp">
+      <form name="joinForm" method="post" action="joinProcess.jsp">
         <div id="joinName" role="inputName">
           <p>사용자 이름</p>
           <input type="text" name="userName" class="input">

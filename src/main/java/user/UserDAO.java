@@ -54,10 +54,10 @@ public class UserDAO {
      *      - 존재하는 경우 true
      *      - 존재하지 않는 경우 false
      * */
-    public String[] doLogin(String userId, String userPwd){
+    public UserDTO doLogin(String userId, String userPwd){
         String SQL = "SELECT * FROM USER WHERE userId = ? AND userPwd = ? ";
         Boolean isSuccess = false;
-        String[] valueList = new String[2]; // 0 : id ; 1 : userName
+        UserDTO user;
         try{
             PreparedStatement statement = connection.prepareStatement(SQL);
             statement.setString(1,userId);
@@ -66,8 +66,10 @@ public class UserDAO {
             ResultSet resultSet = statement.executeQuery();
             // 로그인 성공
             if (resultSet.next()){
-                valueList[0] = resultSet.getString("id");
-                valueList[1] = resultSet.getString("userName");
+                String userName = resultSet.getString("userName");
+                int id = resultSet.getInt("id");
+                user = new UserDTO(id,userId,userName);
+                return user;
             }
             resultSet.close();
             statement.close();
@@ -75,7 +77,7 @@ public class UserDAO {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return valueList;
+        return null;
     }
 
     /**

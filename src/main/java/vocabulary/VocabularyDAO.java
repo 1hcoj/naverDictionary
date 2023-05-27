@@ -45,4 +45,20 @@ public class VocabularyDAO {
         }
         return null;
     }
+
+    public void saveWord(int vocaId,String word){
+        String SQL = "UPDATE WORD SET vocabularyId = ? WHERE word = ? OR meaning = ?";
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement(SQL);
+            statement.setInt(1, vocaId);
+            statement.setString(2,word);
+            statement.setString(3,word);
+
+            statement.executeUpdate();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 }

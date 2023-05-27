@@ -17,7 +17,7 @@ public class UserDTO {
         this.id = id;
         this.userName = userName;
     }
-
+    // UserId -> Int 형으로 반환
     public int getId() {
         return id;
     }

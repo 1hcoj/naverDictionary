@@ -27,7 +27,7 @@
     WordDAO wordDAO = new WordDAO();
     WordDTO[] wordList;
     if (word != null && !word.isEmpty()){
-        String url = "\"../voca/VocabularyPage.jsp?word=" + word + "\"";
+        String url = "\"../voca/SaveVocabulary.jsp?word=" + word + "\"";
         // 한글 검색
         if (word.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")){
             wordList = wordDAO.searchKToE(word);

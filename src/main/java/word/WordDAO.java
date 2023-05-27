@@ -105,4 +105,86 @@ public class WordDAO {
         }
         return wordDTOS;
     }
+
+    public int countWord(int vocaId){
+        String SQL = "SELECT COUNT(*) FROM WORD WHERE vocabularyId = ?";
+        int count = 0;
+        try{
+            PreparedStatement statement = connection.prepareStatement(SQL);
+
+            statement.setInt(1,vocaId);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            resultSet.next();
+            count = resultSet.getInt(1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    public WordDTO[] getWord(int vocaId){
+        String SQL = "SELECT * FROM WORD WHERE vocabularyId  = ?";
+        int count = countWord(vocaId);
+
+        try{
+            PreparedStatement statement = connection.prepareStatement(SQL,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            statement.setInt(1,vocaId);
+
+            ResultSet resultSet = statement.executeQuery();
+            int i =0;
+
+            if (resultSet.next()){
+                WordDTO[] wordDTOS = new WordDTO[count];
+                resultSet.beforeFirst();
+                while (resultSet.next()) {
+
+                    String word = resultSet.getString("word");
+                    String part_of_speech = resultSet.getString("part_of_speech");
+                    String meaning = resultSet.getString("meaning");
+
+                    WordDTO wordDTO = new WordDTO(vocaId, word, part_of_speech, meaning);
+                    wordDTOS[i++] = wordDTO;
+                }
+                return wordDTOS;
+            }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public WordDTO[] getWord(int vocaId,String word){
+        String SQL = "SELECT * FROM WORD WHERE id = ? AND word = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(SQL,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            statement.setInt(1, vocaId);
+            statement.setString(2,word);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()){
+                resultSet.last();
+                int count = resultSet.getRow();
+                resultSet.beforeFirst();
+                WordDTO[] wordDTOS = new WordDTO[count];
+                int i =0;
+                while (resultSet.next()){
+                    String meaning = resultSet.getString("meaning");
+                    String pos = resultSet.getString("part_of_speech");
+                    WordDTO w = new WordDTO(vocaId,word,pos,meaning);
+                    wordDTOS[i++] = w;
+                }
+                return wordDTOS;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -12,7 +12,7 @@
 
   <style>
 
-    .logBtn{
+    .Btn{
       width: 86px;
       height: 32px;
       background-color: #03c75a;
@@ -26,6 +26,10 @@
     #userName{
       margin-right: 16px;
     }
+    #vocabulary{
+      margin-right: 32px;
+    }
+
   </style>
 </head>
 <body>
@@ -37,14 +41,14 @@
     <%
       if (userName!=null){
     %>
-
+    <button class="Btn" onclick="location.href='voca/MyVocabulary.jsp'" id="vocabulary">단어장</button>
     <label id = userName><%=userName%> 님</label>
-    <button class="logBtn" onclick="location.href='index.jsp?logout=1'">로그아웃</button>
+    <button class="Btn" onclick="location.href='index.jsp?logout=1'">로그아웃</button>
 
     <%
     }else if (center == null){
     %>
-    <button class= "logBtn" onclick="location.href='login/loginPage.jsp'">로그인</button>
+    <button class= "Btn" onclick="location.href='login/loginPage.jsp'">로그인</button>
     <%
     }
     else{

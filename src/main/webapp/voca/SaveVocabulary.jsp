@@ -31,10 +31,10 @@
      VocabularyDTO[] vocabularyDTOS = vocabularyDAO.getVocabulary(id); %>
      <h1><%=name%> 님의 단어장</h1>
     <h3>"<%=word%>"를 어떤 단어장에 저장할까요 ? </h3>
-     <form action="VocabularyProcess.jsp?word=<%=word%>>" method="post">
+     <form action="SaveVocabularyProcess.jsp?word=<%=word%>" method="post">
 
      <% for (int i = 0;i<vocabularyDTOS.length;i++) { %>
-         <input type="radio" name="voca" value="<%=vocabularyDTOS[i].getName()%>"><%=vocabularyDTOS[i].getName()%><br>
+         <input type="radio" name="vocabularyId" value="<%=vocabularyDTOS[i].getId()%>"><%=vocabularyDTOS[i].getName()%><br>
      <% } %>
          <input type="submit" value="저장">
      </form>

@@ -29,6 +29,10 @@
             text-decoration-line: none;
             color: gray;
         }
+        #addVocabulary{
+            margin-left: 36%;
+            height: 36px;
+        }
     </style>
 </head>
 <body>
@@ -41,16 +45,19 @@
                 VocabularyDAO vocabularyDAO = new VocabularyDAO();
                 VocabularyDTO[] vocabularyDTOS = vocabularyDAO.getVocabulary(userId);
                 WordDAO wordDAO = new WordDAO();
-                for (int i = 0;i<vocabularyDTOS.length;i++){
-                    // Todo : 링크 처리 -> 링크에 vocaId 정보 넘김
-                    VocabularyDTO v = vocabularyDTOS[i];
-                    int vId = Integer.parseInt(v.getId());
-                    int count = wordDAO.countWord(vId);
-                    String vocaName = v.getName();
-                    String url = "MyVocabularyProcess.jsp?vocabularyId="+vId;
-                    out.println("<h4><a href=\""+url+"\">"+vocaName + " "+count + " ></a> </h4>");
+                if (vocabularyDTOS != null){
+                    for (int i = 0;i<vocabularyDTOS.length;i++){
+                        // Todo : 링크 처리 -> 링크에 vocaId 정보 넘김
+                        VocabularyDTO v = vocabularyDTOS[i];
+                        int vId = Integer.parseInt(v.getId());
+                        int count = wordDAO.countWord(vId);
+                        String vocaName = v.getName();
+                        String url = "MyVocabularyProcess.jsp?vocabularyId="+vId;
+                        out.println("<h4><a href=\""+url+"\">"+vocaName + " "+count + " ></a> </h4>");
+                    }
                 }
             %>
+            <button type="button" id="addVocabulary" onclick="location.href = 'AddVocabulary.jsp'">단어장 추가</button>
         </div>
 
     </div>

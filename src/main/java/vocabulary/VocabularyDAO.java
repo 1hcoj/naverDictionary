@@ -47,7 +47,10 @@ public class VocabularyDAO {
     }
 
     public void saveWord(int vocaId,String word){
-        String SQL = "UPDATE WORD SET vocabularyId = ? WHERE word = ? OR meaning = ?";
+        String SQL = "INSERT INTO SAVE(vocabularyId,wordId) " +
+                " SELECT VOCABULARY.id,WORD.id"+
+                " FROM VOCABULARY,WORD"+
+                " WHERE VOCABULARY.id = ? AND (WORD.word = ? OR WORD.meaning = ?)  ";
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(SQL);
@@ -60,5 +63,18 @@ public class VocabularyDAO {
             e.printStackTrace();
         }
 
+    }
+
+    public void addVocabulary(int userId,String vocabularyName){
+        String SQL = "INSERT INTO Vocabulary(userId,name) VALUES(?,?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(SQL);
+            statement.setInt(1,userId);
+            statement.setString(2,vocabularyName);
+
+            statement.executeUpdate();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

@@ -1,4 +1,4 @@
-<%--
+<%@ page import="user.UserDAO" %><%--
   Created by IntelliJ IDEA.
   User: sagok
   Date: 2023-05-24
@@ -46,7 +46,7 @@
     </style>
 </head>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <script>
   function checkForm(){
     let form = document.joinForm;
@@ -61,8 +61,12 @@
      * */
     let regExpId = /^[0-9a-z]+$/;
     let regExpPw = /(?=.*\d{1,50})(?=.*[~`!@#$%\^&*()-+=]{1,50})(?=.*[a-zA-Z]{2,50}).{8,50}$/;
-
-
+    const urlParams = new URL(location.href).searchParams;
+    const result = urlParams.get('result');
+    if (!result || result === 'true' || result === 'regex') {
+      alert("중복검사를 먼저 실행해주세요!!");
+      return;
+    }
     if (!userName){
       alert("사용자 이름을 입력해주세요!!");
       return;
@@ -82,63 +86,20 @@
     form.submit();
   }
 
-  /**
-   * $(document).ready() : ready 내부의 코드가 html 문서가 로드된 이휴에 실행되도록 설정
-   * $('#버튼 name').click() : click 내부의 코드는 버튼이 클릭되었을 때 실행되는 이벤트 핸들러 정의
-   * $.ajax() : ajax 내부의 코드를 통해 Ajax 요청을 전송
-   *  - type : 요청 전송 방식
-   *  - url : 요청을 보낼 url
-   *  - data : 요청에 포함될 테이터를 설정 { id : 값 }
-   *  - success : 요청이 성공적으로 완료되었을 때 실행되는 callback 메소드 -> 응답 결과를 result 로 받아옴
-   *  - error : 요청이 실패했을 때 실행되는 callback 메소드
-   * */
-  $(document).ready(function() {
+  function checkDuplicate(){
+    let form = document.joinForm;
+    let userId = form.userId.value;
+    location.href = "DuplicateProcess.jsp?id=" + userId;
 
-    var isDuplicate = true;
-
-    $('#checkDuplicateBtn').click(function() {
-      var userId = $('#userId').val();
-      $.ajax({
-        type: 'POST',
-        url: 'checkDuplicate.jsp',
-        data: { userId : userId },
-        success: function(response) {
-          if (response.isDuplicate) {
-            $('#duplicateMsg').text('이미 사용 중인 아이디입니다.')
-            isDuplicate = true;
-          } else {
-            $('#duplicateMsg').text('사용 가능한 아이디입니다.');
-            isDuplicate = false;
-          }
-        },
-        error: function() {
-          alert('중복 검사에 실패했습니다.');
-        }
-      });
-    });
-    /* Todo : 중복처리 */
-    /*$('#buttonJoin').click(function(event){
-      if (isDuplicate){
-        event.preventDefault();
-        alert('아이디 중복검사를 실행해주세요!');
-      }
-      else {
-        checkForm();
-      }
-    });*/
-
-    /*$('#userId').keypress(function(event){
-      if (event.key != 'Enter'){
-        isDuplicate = true;
-      }
-    });*/
-
-  });
+  }
 </script>
 
+<%! Boolean toggle = false;
+    String result;
+%>
 <body>
   <div id="header" role="banner">
-    <p><a href="../login/loginPage.jsp">Home</a></p>
+    <p><a href="../index.jsp">Home</a></p>
   </div>
 
   <div class="wrapper">
@@ -150,9 +111,33 @@
         </div>
         <div id="joinId" role="inputId">
           <p>아이디</p>
-          <input type="text" name="userId" placeholder="영문,숫자 조합" class="input"/><br>
-          <span id="duplicateMsg"></span><br>
-          <input type="button" id="checkDuplicateBtn" value="아이디 중복 검사">
+          <input type="text" name="userId" placeholder="영문,숫자 조합"  class="input" id="userId"  /><br>
+          <%
+            //String result;
+            result = request.getParameter("result");
+            if (result != null && !result.isEmpty()){
+              if (result.equals("true")){
+                out.println("<span style=\"color : red \" >이미 존재하는 아이디입니다!!</span><br>");
+                toggle = false;
+              }
+              else if(result.equals("regex")){
+                out.println("<span style=\"color : red \" >형식에 맞지않는 아이디입니다!!</span><br>");
+                toggle = false;
+              }
+              else {
+                out.println("<span style=\"color : green \">사용가능한 아이디입니다!!</span><br>");
+                toggle = true;
+          %>
+                <script>
+                  let userIdElement = document.getElementById("userId");
+                  userIdElement.value = "<%=result%>";
+                </script>
+          <%
+              }
+            }
+
+          %>
+          <input type="button" id="checkDuplicateBtn" value="아이디 중복 검사" onclick="checkDuplicate()">
         </div>
         <div id="joinPwd" role="inputPwd">
           <p>비밀번호</p>

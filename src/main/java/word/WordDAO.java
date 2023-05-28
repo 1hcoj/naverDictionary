@@ -20,13 +20,14 @@ public class WordDAO {
      * */
     public WordDTO[] searchKToE(String word){
         // Todo : 검색 조건을 like 를 사용하는 방법도 고려 가능
-        String SQL = "SELECT * FROM Word WHERE meaning = ?";
+        String SQL = "SELECT * FROM Word WHERE meaning LIKE ?";
         WordDTO[] wordDTOS = new WordDTO[1];
 
         try{
             PreparedStatement statement = connection.prepareStatement(SQL,
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
+            word = "%" + word + "%";
             statement.setString(1,word);
             ResultSet resultSet = statement.executeQuery();
 
@@ -64,13 +65,14 @@ public class WordDAO {
 
     public WordDTO[] searchEToK(String word){
         // Todo : 검색 조건을 like 를 사용하는 방법도 고려 가능
-        String SQL = "SELECT * FROM Word WHERE word = ?";
+        String SQL = "SELECT * FROM Word WHERE word LIKE ?";
         WordDTO[] wordDTOS = new WordDTO[1];
 
         try{
             PreparedStatement statement = connection.prepareStatement(SQL,
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
+            word = "%" + word + "%";
             statement.setString(1,word);
 
             ResultSet resultSet = statement.executeQuery();
@@ -105,9 +107,17 @@ public class WordDAO {
         }
         return wordDTOS;
     }
-
+    /** SubQuery 문의 사용
+     * */
     public int countWord(int vocaId){
-        String SQL = "SELECT COUNT(*) FROM WORD WHERE vocabularyId = ?";
+        String SQL = "SELECT COUNT(*) AS row_count"+
+        " FROM ("+
+                " SELECT WORD.word,count(*)" +
+                " from SAVE"+
+                " join WORD on SAVE.wordId = WORD.id"+
+                " where SAVE.vocabularyId = ?"+
+                " group by WORD.word"+
+                ") AS subquery";
         int count = 0;
         try{
             PreparedStatement statement = connection.prepareStatement(SQL);
@@ -125,8 +135,11 @@ public class WordDAO {
     }
 
     public WordDTO[] getWord(int vocaId){
-        String SQL = "SELECT * FROM WORD WHERE vocabularyId  = ?";
-        int count = countWord(vocaId);
+        String SQL = "SELECT * "+
+                "FROM SAVE "+
+                "JOIN WORD ON SAVE.wordId = WORD.id"+
+                " WHERE SAVE.vocabularyId  = ? ORDER BY word";
+        int count;
 
         try{
             PreparedStatement statement = connection.prepareStatement(SQL,
@@ -136,8 +149,10 @@ public class WordDAO {
 
             ResultSet resultSet = statement.executeQuery();
             int i =0;
-
             if (resultSet.next()){
+                resultSet.last();
+                count = resultSet.getRow();
+                resultSet.beforeFirst();
                 WordDTO[] wordDTOS = new WordDTO[count];
                 resultSet.beforeFirst();
                 while (resultSet.next()) {

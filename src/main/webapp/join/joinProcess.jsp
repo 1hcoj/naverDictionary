@@ -29,7 +29,7 @@
         int count = userDAO.join(userId,userPwd,userName,userEmail);
 
         if (count == 1){
-            url = "login/loginPage.jsp";
+            url = "../login/loginPage.jsp";
         }
         response.sendRedirect(url);
     %>
